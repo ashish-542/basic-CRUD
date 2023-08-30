@@ -31,7 +31,13 @@ function dashboard(req,res){
 }
 module.exports.dashboard=dashboard;
 
+function getLogin(req,res){
+    res.render("login");
+}
+module.exports.getLogin=getLogin;
+
 function login(req, res) {
+    console.log(req.body);
     passport.authenticate("local", function(err, user, info) {
         if (err) {
             console.log("ERROR ", err);
@@ -51,9 +57,7 @@ function login(req, res) {
                     message: "UnAuthorized"
                 });
             }
-            return res.status(200).json({
-                message: "Login Successfully"
-            });
+            return res.render("dashboard");
         });
     })(req, res);
 }
@@ -72,5 +76,4 @@ function logout(req,res){
         });
     });
 };
-
 module.exports.logout=logout;
