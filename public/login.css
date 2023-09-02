@@ -1,9 +1,4 @@
-/* .loginDiv{
-    /* text-align: center; */
-    /* background-color: aliceblue; */
-    /* border-radius: 5%; */
-    /* box-shadow: 0px 0px 80px rgba(14, 0, 0, 0.5);  */
-
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
 body{
     background-image: url("./images/beth-hope-h_qQdUOxQ9Y-unsplash.jpg");
@@ -14,4 +9,5 @@ body{
     height: 100vh;
     overflow: hidden;
     backdrop-filter: blur(3px); 
+    font-family: 'Poppins', sans-serif;
 }

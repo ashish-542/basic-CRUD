@@ -2,6 +2,8 @@ const express=require("express");
 const router=express.Router();
 const adminController=require("./admin.controller");
 const checkSession=require("../auth/middleware/check-session");
+
+router.get("/signup",adminController.getSignup);
 router.post("/signup",adminController.signup);
 
 router.get("/dashboard",checkSession,adminController.dashboard);

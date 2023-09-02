@@ -1,32 +1,29 @@
 <%- include('./partials/header.ejs') %>
+<link rel="stylesheet" href="/dashboard.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary px-5">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/dashboard">MY CRUD APP</a>
+      <a class="navbar-brand" href="/dashboard"><i class="fa-brands fa-artstation fa-xl me-2" style="color: #91d7ff;"></i> <strong>infocraft</strong></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarText">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/dashboard">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" role="button" onclick=changeDisplay()>Add User</a>
           </li>
-          <!-- <li class="nav-item">
-            <a class="nav-link" href="#">Pricing</a>
-          </li> -->
-        </ul>
-        <span class="navbar-text">
-          <a href="/logout" style="
-            color: rgb(155, 98, 23);
+        <li class="nav-item">
+          <a  class="nav-link" href="/logout" style="
             background-color: transparent;
             text-decoration: none;
           ">Logout</a>
-        </span>
+        </li>
+      </ul>
       </div>
     </div>
   </nav>
@@ -86,8 +83,8 @@
         <td style="width: 4%;"><%= user.phone%></td>
         <td style="width: 4%;"><%= user.username%></td>
         <td style="width: 4%;">
-        <button class="btn btn-warning edit" id="edit_<%=user._id%>">Edit</button>
-        <button class="btn btn-danger delete" id="delete_<%=user._id%>">Delete</button></td>
+        <button class="btn btn-warning edit" id="edit_<%=user._id%>"><i class="fa-solid fa-user-pen me-2"></i>Edit</button>
+        <button class="btn btn-danger delete" id="delete_<%=user._id%>"><i class="fa-solid fa-user-xmark me-2"></i>Delete</button></td>
     </tr>
     <% }) %>
     <%}%>

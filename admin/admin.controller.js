@@ -4,6 +4,12 @@ const passportLocalMongoose =require('passport-local-mongoose');
 const adminModel=require("./admin.schema");
 const userModel=require("../user/user.schema");
 const { getUsers } = require('../user/user.controller');
+
+function getSignup(req,res){
+    res.render("signup");
+}
+module.exports.getSignup=getSignup;
+
 function signup(req,res){
     const adminData={
         username:req.body.username,
@@ -15,10 +21,7 @@ function signup(req,res){
             console.log("ERROR ",err);
         }else{
              passport.authenticate("local")(req,res,function(){
-                console.log("Registered successfully");
-                res.status(201).json({
-                    "message":"registered successfully"
-                })
+                res.redirect("dashboard")
              })
         }
     })

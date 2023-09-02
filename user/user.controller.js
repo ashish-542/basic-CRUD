@@ -9,7 +9,7 @@ async function addUser(req,res){
         password:bcrypt.hashSync(req.body.password, 8),
         owner:req.user._id
     }
-    const checkUserExsist=await userModel.exists({username:user.username});
+    const checkUserExsist=await userModel.exists({username:user.username,owner:req.user._id});
     if(checkUserExsist){
        res.json({
         status:400
