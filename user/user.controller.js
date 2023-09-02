@@ -11,16 +11,20 @@ async function addUser(req,res){
     }
     const checkUserExsist=await userModel.exists({username:user.username});
     if(checkUserExsist){
-        return res.render("message",{
-            msg:"User Already Exists"
-        })
+       res.json({
+        status:400
+       });
     }
     else{
         const newUser=new userModel(user);
         await newUser.save();
-        return res.render("message",{
-            msg:"User Saved Successfully"
-        })
+        const data={
+            name:newUser.name,
+            phone:newUser.phone,
+            username:newUser.username,
+            status:201
+        }
+        return res.json(newUser);
     }
 }
 module.exports.addUser=addUser;

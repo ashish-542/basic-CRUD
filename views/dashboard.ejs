@@ -39,15 +39,15 @@
         <h1 class="modal-title fs-5" id="exampleModalLabel">Add New User</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="/user/add" method="post">
+      <form id="addUserForm">
       <div class="modal-body">
           <div class="mb-3">
             <label for="name" class="col-form-label">Name:</label>
             <input type="text" class="form-control" id="name" name="name">
           </div>
           <div class="mb-3">
-            <label for="Phone Number" class="col-form-label">Phone Number:</label>
-            <input type="text" class="form-control" id="Phone Number" name="phone">
+            <label for="phone" class="col-form-label">Phone Number:</label>
+            <input type="text" class="form-control" id="phone" name="phone">
           </div>
           <div class="mb-3">
             <label for="username" class="col-form-label">Username:</label>
@@ -95,12 +95,42 @@
   </div>
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
   <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
 	<script src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js"></script>
 <script>
   $(document).ready(function () {
       $('#userTable').DataTable();
     });
+
+   $("#addUserForm").on("submit",async function(){
+    const name=$("#name").val();
+    const phone=$("#phone").val();
+    const username=$("#username").val();
+    const password=$("#password").val();
+    $.ajax({
+        url : "http://localhost:3000/user/add",
+        type : 'POST',
+        dataType : 'json',
+        data:{
+          name,
+          username,
+          phone,
+          password
+        },
+        success : function(data) {
+          if(data.status==400){
+            alert("UserName already exists");
+          }
+            $('#userTable tbody').append("<tr><td>" + data.name + "</td><td>" + data.phone + "</td><td>" + data.username + "</td></tr>");
+        },
+        error : function() {
+            console.log('error');
+        }
+    });
+   }); 
+
+
 </script>
 
 <%- include('./partials/footer.ejs') %>
