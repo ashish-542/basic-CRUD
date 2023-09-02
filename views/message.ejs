@@ -1,0 +1,11 @@
+<%- include('./partials/header.ejs') %>
+
+<% if(msg){%> 
+    <div id="msg" class="row justify-content-center v-100 align-items-center mt-5">
+        <div class="col-sm-4">
+            <h1><%=msg%></h1>
+        </div>
+    </div>
+<%}%>
+
+<%- include('./partials/footer.ejs') %>

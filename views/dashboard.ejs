@@ -1,17 +1,20 @@
 <%- include('./partials/header.ejs') %>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+</head>
+<body>
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">MY CRUD APP</a>
+      <a class="navbar-brand" href="/dashboard">MY CRUD APP</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="nav-link active" aria-current="page" href="/dashboard">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Add User</a>
+            <a class="nav-link" href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" role="button">Add User</a>
           </li>
           <!-- <li class="nav-item">
             <a class="nav-link" href="#">Pricing</a>
@@ -27,4 +30,77 @@
       </div>
     </div>
   </nav>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add New User</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/user/add" method="post">
+      <div class="modal-body">
+          <div class="mb-3">
+            <label for="name" class="col-form-label">Name:</label>
+            <input type="text" class="form-control" id="name" name="name">
+          </div>
+          <div class="mb-3">
+            <label for="Phone Number" class="col-form-label">Phone Number:</label>
+            <input type="text" class="form-control" id="Phone Number" name="phone">
+          </div>
+          <div class="mb-3">
+            <label for="username" class="col-form-label">Username:</label>
+            <input type="text" class="form-control" id="username" name="username">
+          </div>
+          <div class="mb-3">
+            <label for="password" class="col-form-label">Password:</label>
+            <input type="password" class="form-control" id="password" name="password">
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+  <div class="text-align-center p-5">
+  <table style="margin: 0 auto" id="userTable" class="table table-striped border round-lg">
+    <thead>
+    <tr style="width: 100%;">
+        <th style="width: 4%;">Name</th>
+        <th style="width: 4%;">Phone Number</th>
+        <th style="width: 4%;">Username</th>
+        <th style="width: 4%;">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%if(users!=undefined){%>
+    <% users.forEach(function(user){ %>
+    <tr style="width: 100%;" >
+        <td style="width: 4%;"><%= user.name%></td>
+        <td style="width: 4%;"><%= user.phone%></td>
+        <td style="width: 4%;"><%= user.username%></td>
+        <td style="width: 4%;">
+        <a href="/edit" class="btn btn-warning" id="edit_<%=user._id%>">Edit</a>
+        <a href="/delete" class="btn btn-danger" id="delete_<%=user._id%>">Delete</a></td>
+    </tr>
+    <% }) %>
+    <%}%>
+  </tbody>
+    </table>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js"></script>
+<script>
+  $(document).ready(function () {
+      $('#userTable').DataTable();
+    });
+</script>
+
 <%- include('./partials/footer.ejs') %>

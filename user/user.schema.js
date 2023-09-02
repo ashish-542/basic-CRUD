@@ -4,7 +4,8 @@ const userSchema = new mongoose.Schema({
     name: String,
     phone:Number,
     username: String,
-    password: String
+    password: String,
+    owner:{type: mongoose.Schema.Types.ObjectId, ref: 'Admin'}
 }, {
     timestamps: true
 });

@@ -2,7 +2,8 @@ const session=require('express-session');
 const passport =require('passport');
 const passportLocalMongoose =require('passport-local-mongoose');
 const adminModel=require("./admin.schema");
-
+const userModel=require("../user/user.schema");
+const { getUsers } = require('../user/user.controller');
 function signup(req,res){
     const adminData={
         username:req.body.username,
@@ -24,10 +25,9 @@ function signup(req,res){
 }
 module.exports.signup=signup;
 
-function dashboard(req,res){
-    res.status(200).json({
-        message:"Dashboad opened"
-    });
+async function dashboard(req,res){
+    const users=await getUsers(req,res);
+    res.render("dashboard",{users:users});
 }
 module.exports.dashboard=dashboard;
 
@@ -57,7 +57,7 @@ function login(req, res) {
                     message: "UnAuthorized"
                 });
             }
-            return res.render("dashboard");
+            return res.redirect("dashboard");
         });
     })(req, res);
 }

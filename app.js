@@ -21,6 +21,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 const adminRouter=require("./admin/admin.router");
 app.use("/",adminRouter);
+const userRouter=require("./user/user.router");
+app.use("/user",userRouter);
 app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views')); 
