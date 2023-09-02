@@ -4,9 +4,7 @@ function checkSession(req,res,next){
         console.log("session checked");
         next();
     }else{
-        res.status(401).json({
-            message:"Unauthorized"
-        })
+        res.redirect("/");
     }
 }
 module.exports=checkSession;

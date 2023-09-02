@@ -71,9 +71,7 @@ function logout(req,res){
                 message: "Error during logout"
             });
         }
-        res.status(200).json({
-            message: "Logged out successfully"
-        });
+        res.redirect("/");
     });
 };
 module.exports.logout=logout;

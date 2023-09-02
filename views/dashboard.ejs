@@ -14,7 +14,7 @@
             <a class="nav-link active" aria-current="page" href="/dashboard">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" role="button">Add User</a>
+            <a class="nav-link" href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" role="button" onclick=changeDisplay()>Add User</a>
           </li>
           <!-- <li class="nav-item">
             <a class="nav-link" href="#">Pricing</a>
@@ -53,7 +53,7 @@
             <label for="username" class="col-form-label">Username:</label>
             <input type="text" class="form-control" id="username" name="username">
           </div>
-          <div class="mb-3">
+          <div class="mb-3" id="passwordDiv">
             <label for="password" class="col-form-label">Password:</label>
             <input type="password" class="form-control" id="password" name="password">
           </div>
@@ -61,6 +61,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="submit" class="btn btn-primary">Submit</button>
+        <h1 style="display: none;" id="id"></h1>
       </div>
     </form>
     </div>
@@ -85,8 +86,8 @@
         <td style="width: 4%;"><%= user.phone%></td>
         <td style="width: 4%;"><%= user.username%></td>
         <td style="width: 4%;">
-        <a href="/edit" class="btn btn-warning" id="edit_<%=user._id%>">Edit</a>
-        <a href="/delete" class="btn btn-danger" id="delete_<%=user._id%>">Delete</a></td>
+        <button class="btn btn-warning edit" id="edit_<%=user._id%>">Edit</button>
+        <button class="btn btn-danger delete" id="delete_<%=user._id%>">Delete</button></td>
     </tr>
     <% }) %>
     <%}%>
@@ -107,6 +108,43 @@
     const name=$("#name").val();
     const phone=$("#phone").val();
     const username=$("#username").val();
+    let afterUsername;
+    if($("#addUserForm").hasClass("edit-mode")){
+      const id=$("#id").val();
+      $.ajax({
+        url : "http://localhost:3000/user/edit",
+        type : 'POST',
+        dataType : 'json',
+        data:{
+          name,
+          username,
+          phone,
+          id
+        },
+        success : function(data) {
+          if(data.status==400){
+            alert("User Not Found while updating user");
+          }else{
+            console.log(data.user);
+            alert(`${data.user.username} updated successfully`);
+            var tdElement = $("#userTable td:contains(" + data.user.username + ")");
+            if (tdElement.length > 0) {
+            var trElement = tdElement.closest("tr");
+            var tdElements=trElement.find("td");
+            $(tdElements[0]).val(data.user.name);
+            $(tdElements[1]).val(data.user.phone);
+            $(tdElements[2]).val(data.user.username);
+          } else {
+                 console.log("Value not found in the table.");
+                }
+          }
+        },
+        error : function() {
+            alert("some error occured");
+        }
+    });
+
+  }else{
     const password=$("#password").val();
     $.ajax({
         url : "http://localhost:3000/user/add",
@@ -122,14 +160,88 @@
           if(data.status==400){
             alert("UserName already exists");
           }
-            $('#userTable tbody').append("<tr><td>" + data.name + "</td><td>" + data.phone + "</td><td>" + data.username + "</td></tr>");
+            $('#userTable tbody').append(`<tr><td> ${data.name} </td><td> ${data.phone} </td><td>${data.username}</td><td><button>Edit</button><button>Delete</button></td></tr>`);
         },
         error : function() {
-            console.log('error');
+            alert("some error occured");
+        }
+    });
+   }
+  }); 
+    
+   $(".delete").on("click",async function(){
+    const id=this.id.substr(7);
+    const row=$(this).closest('tr');
+    $.ajax({
+        url : "http://localhost:3000/user/get",
+        type : 'POST',
+        dataType : 'json',
+        data:{id
+        },
+        success : function(data) {
+          if(data.status==400){
+            alert("User Not Found");
+          }else{
+         const response=confirm(`Are you sure, you want to delete ${data.user.username} ?`);
+         if(response){
+          $.ajax({
+        url : "http://localhost:3000/user/delete",
+        type : 'POST',
+        dataType : 'json',
+        data:{
+          id
+        },
+        success : function(data) {
+          if(data.status==400){
+            alert("failed");
+          }else{
+            alert(`User deleted successfully`);
+            row.remove();
+          }
+        },
+        error : function() {
+            alert("some error occured");
+        }
+    });
+         }
+          }
+          
+        },
+        error : function() {
+            alert("some error occured");
         }
     });
    }); 
 
+   $(".edit").on("click",async function(){
+    const id=this.id.substr(5);
+    const row=$(this).closest('tr');
+    var tdElements = row.find('td');
+
+        // Extract the values from 'td' elements
+        var name = $(tdElements[0]).text();
+        var phone = $(tdElements[1]).text();
+        var username = $(tdElements[2]).text();
+        $("#name").val(name);
+        $("#phone").val(phone);
+        $("#username").val(username);
+        $("#username").val(username);
+        $("#passwordDiv").css('display','none');
+        $("#addUserForm").addClass('edit-mode');
+        $("#exampleModalLabel").html("Edit User");
+        $("#id").val(id);
+        $("#exampleModal").modal("show");
+   }); 
+
+   function changeDisplay(){
+   $("#passwordDiv").css('display','block');
+   $("#addUserForm").removeClass("edit-mode");
+   $("#exampleModalLabel").html("Add New User");
+   $("#name").val("");
+   $("#phone").val("");
+   $("#username").val("");
+   $("#id").val("");
+   }
 
 </script>
 
