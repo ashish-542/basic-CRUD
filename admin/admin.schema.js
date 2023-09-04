@@ -17,22 +17,22 @@ const adminModel = mongoose.model("Admin", adminSchema);
 passport.use(new LocalStrategy(adminModel.authenticate()));
 
 passport.serializeUser(function (user, done) {
-    console.log("Serializing user:", user);
+    // console.log("Serializing user:", user);
     done(null, user._id);
 });
 
 passport.deserializeUser(async function (id, done) {
     try {
-        console.log("Deserializing user with ID:", id);
+        // console.log("Deserializing user with ID:", id);
         const admin = await adminModel.findById(id);
         if (!admin) {
             console.log("User not found");
             return done(null, false);
         }
-        console.log("Deserialized user:", admin);
+        // console.log("Deserialized user:", admin);
         done(null, admin);
     } catch (err) {
-        console.error("Error deserializing user:", err);
+        // console.error("Error deserializing user:", err);
         done(err, null);
     }
 });

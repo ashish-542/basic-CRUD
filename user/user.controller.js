@@ -68,6 +68,7 @@ async function deleteUser(req,res){
 module.exports.deleteUser=deleteUser;
 
 async function editUser(req,res){
+    console.log(req.body);
     const user= await userModel.findOne({_id:req.body.id,owner:req.user._id});
     console.log("User found ",user);
     if(user!=undefined){ 
@@ -78,6 +79,7 @@ async function editUser(req,res){
         },{
             new:true
         });
+        console.log(editedUser);
         res.json({
         status:200,
         user:editedUser    
