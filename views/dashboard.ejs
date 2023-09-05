@@ -73,7 +73,7 @@
         <th style="width: 4%;">Phone Number</th>
         <th style="width: 4%;">Username</th>
         <th style="width: 4%;">Action</th>
-      <!-- <th style="width: 4%; display: none;">Name</th> -->
+      <th style=" display: none;">Name</th>
     </tr>
   </thead>
   <tbody>
@@ -86,7 +86,7 @@
         <td style="width: 4%;">
         <button class="btn btn-warning edit" id="edit_<%=user._id%>"><i class="fa-solid fa-user-pen me-2"></i>Edit</button>
         <button class="btn btn-danger delete" id="delete_<%=user._id%>"><i class="fa-solid fa-user-xmark me-2"></i>Delete</button></td>
-      <!-- <td style="width: 4%; display: none;"><%= user.name%></td> -->
+      <td style=" display: none;"><%= user.id%></td>
     </tr>
     <% }) %>
     <%}%>
@@ -126,22 +126,40 @@
           }else{
             console.log(data.user);
             alert(`${data.user.username} updated successfully`);
-            var tdElement = $("#userTable td:contains(" + data.user.username + ")");
-            console.log(tdElement,"tdElements");
-            if (tdElement.length > 0) {
-            var trElement = tdElement.closest("tr");
-            var tdElements=trElement.find("td");
+            var tdElementss = document.querySelectorAll('td');
+            console.log(tdElementss);
+          for (var i = 0; i < tdElementss.length; i++) {
+            var td = tdElementss[i];
+            var buttonIdToFind="edit_"+data.user._id;
+            var buttonsInTd = td.querySelectorAll('button');
+  
+             for (var j = 0; j < buttonsInTd.length; j++) {
+    var button = buttonsInTd[j];
+    
+    if (button.id === buttonIdToFind) {
+      console.log('Found the <td> element containing the button with ID ' + buttonIdToFind + ':', td);
+        break;         
+    }
+  }
+             break; 
+}
+          }
+          if (td!=undefined) {
+            var trElement = $(td).closest('tr');
+            console.log("Closest Row ",trElement);
+            var tdElements = trElement.data();  
             console.log(tdElements,"tdElements");
-            await $(tdElements[0]).text(data.user.name);
-            await $(tdElements[1]).text(data.user.phone);
-            await $(tdElements[2]).text(data.user.username);
-            console.log(tdElements,"tdElements");
-      $("#exampleModal").modal('hide');
-      userTable.draw();
-          } else {
+            $(tdElements[0]).text(data.user.name);
+            $(tdElements[1]).text(data.user.phone);
+            $(tdElements[2]).text(data.user.username);
+            // console.log(tdElements,"tdElements");
+            $("#exampleModal").modal('hide');
+            userTable.draw();
+             }
+            else {
                  console.log("Value not found in the table.");
                 }
-          }
+           
         },
         error : function() {
             alert("some error occured");
@@ -162,20 +180,32 @@
         },
         success : function(data) {
           if(data.status==400){
-            alert("UserName already exists");
-          }
+            if(data.errors!=undefined){
+              let errors = [];
+            Object.keys(data.errors).forEach((key) => {
+              errors.push(data.errors[key]);
+            });
+              console.log(data.errors,errors);
+              alert(errors)
+            }else{
+              alert("UserName already exists");
+            }
+          }else{
           if (userTable) {
-      // Add the new user to the DataTable
       userTable.row.add([
         data.name,
         data.phone,
         data.username,
         `<button class="btn btn-warning edit" id="edit_${data.id}"><i class="fa-solid fa-user-pen me-2"></i>Edit</button> <button class="btn btn-danger delete" id="delete_${data.id}"><i class="fa-solid fa-user-xmark me-2"></i>Delete</button>`,
+        data.id
       ]).draw();}
+      userTable.columns([4]).visible(false);
       $("#exampleModal").modal('hide');
-        },
-        error : function() {
-            alert("some error occured");
+        }
+      },
+        error : function(data) {
+          console.log(data);
+            alert("some error occured",data);
         }
     });
    }

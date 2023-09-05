@@ -16,6 +16,7 @@ async function addUser(req,res){
        });
     }
     else{
+        try{
         const newUser=new userModel(user);
         await newUser.save();
         const data={
@@ -26,6 +27,18 @@ async function addUser(req,res){
             status:201
         }
         return res.json(data);
+    }catch(error){
+        console.log(error);
+        let errors = {};
+            Object.keys(error.errors).forEach((key) => {
+              errors[key] = error.errors[key].message;
+            });
+            const data={
+                errors:errors,
+                status:400
+            }
+            return res.json(data);
+          }
     }
 }
 module.exports.addUser=addUser;
